@@ -14,6 +14,10 @@ module.exports = (sequelize, DataTypes) => {
                 foreignKey: 'UserID',
                 as: 'user'
             });
+            this.belongsTo(models.Cart, {
+                foreignKey: 'CartID',
+                as: 'cart'
+            });
         }
     }
     Order.init({

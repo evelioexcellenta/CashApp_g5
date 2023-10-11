@@ -4,7 +4,7 @@ const routers = express.Router()
 
 routers.get('/get', productController.getData)
 routers.post('/add-products', productController.addData)
-    // routers.patch('/edit-products/:id', productController.editData)
-routers.delete('/delete-products/:Product_ID', productController.deleteData)
+routers.patch('/edit-products/:ProductID', productController.editData)
+routers.delete('/delete-products/:ProductID', productController.deleteData)
 
 module.exports = routers
