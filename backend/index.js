@@ -9,7 +9,7 @@ app.use(express.json())
 const db = require('./models')
 
 try {
-    db.sequelize.sync({ alter: true })
+    db.sequelize.sync({ force: true })
     console.log("database connected")
 } catch (error) {
     console.log(error)
@@ -21,10 +21,13 @@ app.get('/', (req, res) => {
 })
 
 const { productRouter } = require("./routers");
+const { categoryRouter } = require("./routers");
+
 // const { usersRouter } = require('./routers')
 // const { cartsRouter } = require('./routers')
 
 app.use("/product", productRouter);
+app.use("/category", categoryRouter);
 // app.use('/users', usersRouter)
 // app.use('/carts', cartsRouter)
 
