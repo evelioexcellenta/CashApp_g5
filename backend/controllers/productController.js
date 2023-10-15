@@ -1,102 +1,57 @@
-const db = require('../models')
-const fs = require("fs");
-const Product = db.Product;
-
+const { db } = require('../database')
 module.exports = {
-    getData: async(req, res) => {
-        try {
-            const products = await Product.findAll({
-                attributes: {
-                    exclude: ["is_admin"],
-                },
-            });
-
-            return res.status(200).send({
-                message: "Product List successfully created",
-                data: products,
-            });
-        } catch (err) {
-            return res.status(500).send({
-                message: JSON.stringify(err),
-                data: null,
-            });
+    getData: (req, res) => {
+        let scriptQuery = `SELECT products.*, categories.Category_Name FROM products LEFT JOIN categories ON products.CategoryID = categories.CategoryID`;
+      
+        if (req.query && req.query.ProductID) {
+          scriptQuery += ` WHERE products.ProductID = ${db.escape(req.query.ProductID)}`;
         }
-    },
-    addData: (req, res) => {;
-        try {
-            console.log(req.body)
-            let { Product_Name, Price, Description } = req.body
-            Product.create({ Product_Name, Price, Description })
+      
+        db.query(scriptQuery, (err, results) => {
+          if (err) res.status(500).send(err);
+          res.status(200).send(results);
+        });
+      },
+      
 
-            return res.status(200).json({
-                message: "penambahan products berhasil",
-                data: [],
-            });
-        } catch (err) {
-            return res.status(500).send({
-                message: JSON.stringify(err),
-                data: null,
-            });
+
+    addData: (req, res) => {
+        console.log(req.body)
+        let { Product_Name, Product_Image, Price, Description, CategoryID } = req.body
+        let insertQuery = `Insert into products values (null,${db.escape(Product_Name)},${db.escape(Product_Image)},${db.escape(Price)},${db.escape(Description)},${db.escape(CategoryID)})`
+        //
+        console.log(insertQuery)
+        db.query(insertQuery, (err, results) => {
+            if (err) res.status(500).send(err)
+
+            db.query(`Select * from products where Product_Name = ${db.escape(Product_Name)}`, (err2, results2) => {
+                res.status(200).send({
+                    message: `penambahan products berhasil`,
+                    data: results2
+                })
+            })
+            // res.status(200).send(results)
+        })
+    },
+    editData: (req, res) => {
+        let dataUpdate = []
+        for (let prop in req.body) {
+            dataUpdate.push(`${prop} = ${db.escape(req.body[prop])}`)
         }
+
+        let updateQuery = `UPDATE products set ${dataUpdate} where ProductID = ${req.params.ProductID}`
+        console.log(updateQuery)
+        db.query(updateQuery, (err, results) => {
+            if (err) res.status(500).send(err)
+            res.status(200).send(results)
+        })
     },
-    editData: async(req, res) => {
-        try {
-            const { Product_Name, Price, Description } = req.body;
-            const { id } = req.params;
+    deleteData: (req, res) => {
+        let deleteQuery = `DELETE from products where ProductID = ${db.escape(req.params.ProductID)}`
 
-            if (!Product_Name || !Price || !Description) {
-                return res.status(400).json({
-                    message: "Product_Name, Price, and Description are required",
-                    data: null,
-                });
-            }
-
-            const product = await Product.findOne({ where: { ProductID: id } });
-
-            if (!product) {
-                return res.status(404).json({
-                    message: "Product not found",
-                    data: null,
-                });
-            }
-
-            product.Product_Name = Product_Name;
-            product.Price = Price;
-            product.Description = Description;
-
-            await product.save();
-
-            return res.status(200).json({
-                message: "Product successfully updated",
-                data: product,
-            });
-        } catch (err) {
-            return res.status(500).send({
-                message: JSON.stringify(err),
-                data: null,
-            });
-        }
-    },
-    deleteData: async(req, res) => {
-        try {
-            const { ProductID } = req.params;
-
-            const productDelete = await Product.destroy({
-                where: {
-                    ProductID: ProductID,
-                },
-            });
-
-            return res.status(200).send({
-                message: "Product successfully delete",
-                data: productDelete,
-            });
-        } catch (err) {
-            return res.status(500).send({
-                message: JSON.stringify(err.message),
-                data: null,
-            });
-        }
-    },
-
+        db.query(deleteQuery, (err, results) => {
+            if (err) res.status(500).send(err)
+            res.status(200).send(results)
+        })
+    }
 }
