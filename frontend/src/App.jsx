@@ -1,34 +1,49 @@
+
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import Sidebar, { SidebarItem } from './components/myNavbar';//
+// import "bootstrap/dist/css/bootstrap.css"
+
+import Home from './pages/Home';
+import Login from './pages/Auth/Login'
+import Admin from './pages/Admin'
+import Cart from './pages/Cart'
+import History from './pages/History'
+import ProductDetail from './pages/ProductDetail'
+import Search from './pages/Search'
+import FullAdmin from './pages/FullAdmin';
+
+import { LifeBuoy, Receipt, Boxes, Package, UserCircle, BarChart3, LayoutDashboard, Settings } from 'lucide-react';
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div className='App' style={{ display: 'flex' }}>
+
+      <BrowserRouter>
+        <Sidebar>
+          <SidebarItem icon={<LayoutDashboard size={20} />} text="Dashboard" to="/search" />
+          {/* <SidebarItem icon={<BarChart3 size={20} />} text="Statistics" />
+          <SidebarItem icon={<UserCircle size={20} />} text="Users" /> */}
+          {/* <SidebarItem icon={<Boxes size={20} />} text="Inventory"  to="/home"/> */}
+          {/* <SidebarItem icon={<Package size={20} />} text="Orders"  to={"/history"}/> */}
+          <SidebarItem icon={<Receipt size={20} />} text="Admin" to='/fulladmin'/>
+          <hr className='my-3' />
+          <SidebarItem icon={<Settings size={20} />} text="Settings" />
+          <SidebarItem icon={<LifeBuoy size={20} />} text="Account" />
+        </Sidebar>
+
+        <Routes>
+          <Route Component={Home} path='/home' />
+          <Route element={<Search/>} path='/search' />
+          <Route path='/fulladmin' element={<FullAdmin />} />
+          <Route Component={Login} path='/login' />
+          <Route Component={ProductDetail} path='/product-detail/:productId' />
+          <Route Component={Cart} path='/cart' />
+          <Route Component={History} path='/history' />
+        </Routes>
+      </BrowserRouter>
+    </div>
   )
 }
 
