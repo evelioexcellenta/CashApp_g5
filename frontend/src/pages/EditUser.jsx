@@ -12,9 +12,9 @@ const EditUser = () => {
     if (isError) {
       navigate("/")
     }
-    if (user && user.Role !== "admin") {
-      navigate("/dashboard")
-    }
+    // if (user && user.Role !== "admin") {
+    //   navigate("/dashboard")
+    // }
   }, [isError, navigate, user])
   return (
     <Layout>

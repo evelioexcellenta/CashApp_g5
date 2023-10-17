@@ -12,10 +12,10 @@ const Users = () => {
     if (isError) {
       navigate("/")
     }
-    if (user && user.role !== "admin") {
-      navigate("/dashboard")
-    }
-  }, [isError, navigate, user])
+    // if (user && user.role !== "admin") {
+    //   navigate("/dashboard")
+    // }
+  }, [isError, navigate])
   return (
     <Layout>
       <UserList />

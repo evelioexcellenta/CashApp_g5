@@ -4,7 +4,7 @@ const user = db.User
 
 const userController = {
   createUser: async (req, res) => {
-    const { Fullname, Username, Email, Password, ConfPassword, Role } = req.body
+    const { Fullname, Email, Password, ConfPassword, Role } = req.body
     if (Password !== ConfPassword)
       return res
         .status(400)
@@ -15,7 +15,6 @@ const userController = {
     try {
       await user.create({
         Fullname: Fullname,
-        Username: Username,
         Email: Email,
         Password: hashPassword,
         Role: Role,
@@ -57,10 +56,10 @@ const userController = {
     })
     if (!userToUpdate)
       return res.status(404).json({ msg: "User tidak ditemukan" })
-    const { Fullname, Username, Email, Password, ConfPassword, Role } = req.body
+    const { Fullname, Email, Password, ConfPassword, Role } = req.body
     let hashPassword
     if (Password === "" || Password === null) {
-      hashPassword = update.Password
+      hashPassword = Password
     } else {
       const salt = await bcrypt.genSalt(10)
       hashPassword = await bcrypt.hash(Password, salt)
@@ -73,7 +72,6 @@ const userController = {
       await user.update(
         {
           Fullname: Fullname,
-          Username: Username,
           Email: Email,
           Password: hashPassword,
           Role: Role,

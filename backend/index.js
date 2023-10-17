@@ -10,7 +10,7 @@ const { verifyUser } = require("./middleware/authUser")
 
 const corsOption = {
   origin: "http://127.0.0.1:5173",
-  methods: "GET,POST,DELETE",
+  methods: "GET,POST,DELETE,PATCH",
   credentials: true,
 }
 

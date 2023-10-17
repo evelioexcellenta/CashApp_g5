@@ -36,6 +36,25 @@ const authController = {
 
     res.json({ msg: "Logout Berhasil" })
   },
+
+  // me: async (req, res) => {
+  //   try {
+  //     if (!req.user)
+  //       return res.status(401).json({ msg: "Mohon login ke akun anda !" })
+  //     const userDetails = await user.findOne({
+  //       where: { UserID: req.user.id },
+  //       attributes: ["Fullname", "Email", "Role"],
+  //     })
+
+  //     if (!userDetails) {
+  //       return res.status(404).json({ msg: "User tidak ditemukan" })
+  //     }
+
+  //     res.status(200).json(userDetails)
+  //   } catch (error) {
+  //     res.status(500).json({ msg: error.message })
+  //   }
+  // },
 }
 
 module.exports = { authController }
