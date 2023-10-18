@@ -1,47 +1,39 @@
-const express = require('express')
-const cors = require('cors')
-
+const express = require("express")
+const cors = require("cors")
+const dotenv = require("dotenv")
 const app = express()
-const PORT = 3300;
+const userRouter = require("./routers/userRouter")
+const db = require("./models")
+const authRouter = require("./routers/authRouter")
+dotenv.config()
+const { verifyUser } = require("./middleware/authUser")
 
-app.use(cors())
-app.use(express.json())
-const db = require('./models')
-
-try {
-    db.sequelize.sync({ alter: true })
-    console.log("database connected")
-} catch (error) {
-    console.log(error)
+const corsOption = {
+  origin: "http://127.0.0.1:5173",
+  methods: "GET,POST,DELETE,PATCH",
+  credentials: true,
 }
 
+app.use(express.static("assets"))
 
-app.get('/', (req, res) => {
-    res.status(200).send('<h4>Integrated mysql with express</h4>')
+app.use(cors(corsOption))
+
+app.use(express.json())
+app.use(userRouter)
+app.use(authRouter)
+app.use("/dashboard", verifyUser)
+
+try {
+  db.sequelize.sync({ alter: true })
+  console.log("database connected")
+} catch (error) {
+  console.log(error)
+}
+
+app.get("/", async (req, res) => {
+  res.status(200).send("<h4>Integrated mysql with express</h4>")
 })
 
-const { productRouter } = require("./routers");
-// const { usersRouter } = require('./routers')
-// const { cartsRouter } = require('./routers')
-
-app.use("/product", productRouter);
-// app.use('/users', usersRouter)
-// app.use('/carts', cartsRouter)
-
-
-app.listen(PORT, () => console.log('api running :', PORT));
-
-
-
-
-
-
-
-
-// app.get('/products', (req, res) => {
-//     let scriptQuery = `Select * from products`
-//     db.query(scriptQuery, (err, results) => {
-//         if (err) res.status(500).send(err)
-//         res.status(200).send(results)
-//     })
-// })
+app.listen(process.env.APP_PORT, () =>
+  console.log("api running :", process.env.APP_PORT)
+)
