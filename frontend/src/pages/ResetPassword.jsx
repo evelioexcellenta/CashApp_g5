@@ -1,10 +1,10 @@
 import React, { useEffect } from "react"
 import Layout from "./Layout"
-import FormEditUser from "../components/FormEditUser"
+import FormResetPassword from "../components/FormResetPassword"
 import { useNavigate } from "react-router-dom"
 import { useSelector } from "react-redux"
 
-const EditUser = () => {
+const ResetPassword = () => {
   const navigate = useNavigate()
   const { isError, user } = useSelector((state) => state.auth)
 
@@ -18,9 +18,9 @@ const EditUser = () => {
   }, [isError, navigate, user])
   return (
     <Layout>
-      <FormEditUser />
+      <FormResetPassword />
     </Layout>
   )
 }
 
-export default EditUser
+export default ResetPassword

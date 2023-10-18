@@ -14,6 +14,8 @@ const corsOption = {
   credentials: true,
 }
 
+app.use(express.static("assets"))
+
 app.use(cors(corsOption))
 
 app.use(express.json())
@@ -28,13 +30,9 @@ try {
   console.log(error)
 }
 
-app.get("/", (req, res) => {
+app.get("/", async (req, res) => {
   res.status(200).send("<h4>Integrated mysql with express</h4>")
 })
-
-const { productRouter } = require("./routers")
-
-app.use("/product", productRouter)
 
 app.listen(process.env.APP_PORT, () =>
   console.log("api running :", process.env.APP_PORT)

@@ -29,22 +29,6 @@ export const LoginUser = createAsyncThunk(
   }
 )
 
-// export const getMe = createAsyncThunk("user/getMe", async (_, thunkAPI) => {
-//   try {
-//     const response = await axios.get("http://localhost:3300/me", {
-//       headers: {
-//         Authorization: `Bearer ${localStorage.getItem("token")}`,
-//       },
-//     })
-//     return response.data
-//   } catch (error) {
-//     if (error.response) {
-//       const message = error.response.data.msg
-//       return thunkAPI.rejectWithValue(message)
-//     }
-//   }
-// })
-
 export const LogOut = createAsyncThunk("user/Logout", async () => {
   await axios.delete("http://localhost:3300/logout", {
     headers: {

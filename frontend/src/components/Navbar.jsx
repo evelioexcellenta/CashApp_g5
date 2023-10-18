@@ -2,6 +2,7 @@ import React from "react"
 import { NavLink, useNavigate } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
 import { LogOut, reset } from "./../features/authSlice"
+import { IoPerson } from "react-icons/io5"
 
 const Navbar = () => {
   const dispatch = useDispatch()
@@ -13,6 +14,12 @@ const Navbar = () => {
     await dispatch(reset())
     navigate("/")
   }
+  // console.log(user)
+
+  const Profile = () => {
+    navigate(`/users/edit/${user.userID}`)
+  }
+
   return (
     <div>
       <nav
@@ -22,16 +29,11 @@ const Navbar = () => {
       >
         <div className="navbar-brand">
           <NavLink to="/dashboard" className="navbar-item">
-            {/* <img
-              src="https://bulma.io/images/bulma-logo.png"
-              width="112"
-              height="28"
-              alt="logo"
-            /> */}
+            {/* Your logo or brand */}
           </NavLink>
 
           <a
-            href="!#"
+            href="#!"
             role="button"
             className="navbar-burger burger"
             aria-label="menu"
@@ -48,6 +50,11 @@ const Navbar = () => {
           <div className="navbar-end">
             <div className="navbar-item">
               <div className="buttons">
+                <button className="button" onClick={Profile}>
+                  <IoPerson />
+                  Profile
+                </button>
+
                 <button className="button is-light" onClick={Logout}>
                   Log out
                 </button>

@@ -1,6 +1,29 @@
 const db = require("./../models")
 const bcrypt = require("bcrypt")
 const user = db.User
+const multer = require("multer")
+const path = require("path")
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, path.join(__dirname, "./../assets"))
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + "-" + file.originalname)
+  },
+})
+
+const upload = multer({
+  storage: storage,
+  fileFilter: (req, file, cb) => {
+    const ext = path.extname(file.originalname)
+    if (ext !== ".jpg" && ext !== ".png" && ext !== ".gif") {
+      return cb(new Error("Only images are allowed"))
+    }
+    cb(null, true)
+  },
+  limits: { fileSize: 1000000 },
+}).single("profile")
 
 const userController = {
   createUser: async (req, res) => {
@@ -19,6 +42,7 @@ const userController = {
         Password: hashPassword,
         Role: Role,
       })
+
       res.status(201).json({ msg: "Register Berhasil" })
     } catch (error) {
       res.status(400).json({ msg: error.message })
@@ -104,6 +128,32 @@ const userController = {
       res.status(200).json({ msg: "User berhasil dihapus" })
     } catch (error) {
       res.status(400).json({ msg: error.message })
+    }
+  },
+  uploadProfileImage: async (req, res) => {
+    try {
+      upload(req, res, async (err) => {
+        if (err) {
+          return res.status(500).json({ msg: err.message })
+        }
+
+        const userID = req.params.id
+        console.log("/////////////////////", user.Email)
+        const userToUpdate = await user.findOne({
+          where: {
+            UserID: userID,
+          },
+        })
+        if (!userToUpdate)
+          return res.status(404).json({ msg: "User tidak ditemukan" })
+
+        userToUpdate.ProfileImage = req.file.filename
+        await userToUpdate.save()
+        return res.status(200).json({ msg: "Gambar profil berhasil diunggah" })
+      })
+    } catch (error) {
+      console.error(error)
+      return res.status(500).json({ msg: error.message })
     }
   },
 }

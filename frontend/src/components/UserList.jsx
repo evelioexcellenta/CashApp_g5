@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react"
 import axios from "axios"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
 const UserList = () => {
   const [users, setUsers] = useState([])
+  const [profile, setProfile] = useState(null)
+  const navigate = useNavigate()
 
   useEffect(() => {
     getUsers()
@@ -27,6 +29,21 @@ const UserList = () => {
       },
     })
     getUsers()
+  }
+
+  const sendEmail = async (userID) => {
+    try {
+      const token = localStorage.getItem("token")
+      await axios.post(`http://localhost:3300/users/email/${userID}`, null, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      // Redirect ke halaman notifikasi
+      navigate("/notification")
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   return (
@@ -58,12 +75,12 @@ const UserList = () => {
               <td>{user.Email}</td>
               <td>{user.Role}</td>
               <td>
-                <Link
-                  to={`/users/edit/${user.UserID}`}
+                <button
+                  onClick={() => sendEmail(user.UserID)}
                   className="button is-small is-info mr-4"
                 >
                   Edit
-                </Link>
+                </button>
                 <button
                   onClick={() => deleteUser(user.UserID)}
                   className="button is-small is-danger"
