@@ -33,15 +33,17 @@ function App() {
           <SidebarItem icon={<LifeBuoy size={20} />} text="Account" />
         </Sidebar>
 
-        <Routes>
-          <Route Component={Home} path='/home' />
-          <Route element={<Search/>} path='/search' />
-          <Route path='/fulladmin' element={<FullAdmin />} />
-          <Route Component={Login} path='/login' />
-          <Route Component={ProductDetail} path='/product-detail/:productId' />
-          <Route Component={Cart} path='/cart' />
-          <Route Component={History} path='/history' />
-        </Routes>
+        <div style={{ marginLeft: '250px' }}>
+          <Routes>
+            <Route Component={Home} path='/home' />
+            <Route element={<Search/>} path='/search' />
+            <Route path='/fulladmin' element={<FullAdmin />} />
+            <Route Component={Login} path='/login' />
+            <Route Component={ProductDetail} path='/product-detail/:productId' />
+            <Route Component={Cart} path='/cart' />
+            <Route Component={History} path='/history' />
+          </Routes>
+        </div>
       </BrowserRouter>
     </div>
   )

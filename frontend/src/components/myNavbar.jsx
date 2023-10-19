@@ -9,7 +9,7 @@ export default function Sidebar({ children }) {
   console.log(expanded)
   
   return (
-    <aside className="h-screen" style={{width: expanded ? '250px' : '75px'}}>
+    <aside className="h-screen fixed" style={{width: expanded ? '250px' : '75px'}}>
       <nav className="h-full flex flex-col bg-white border-r shadow-sm">
         <div className="p-4 pb-2 flex justify-between items-center">
           <img
